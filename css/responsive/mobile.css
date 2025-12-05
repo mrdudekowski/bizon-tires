@@ -1,0 +1,92 @@
+/* Мобильные устройства (до 768px) */
+
+@media (max-width: 768px) {
+    .nav-menu {
+        display: none;
+    }
+
+    .header-phone {
+        font-size: 0.9rem;
+    }
+
+    .hero {
+        min-height: 80vh;
+        padding-top: 100px;
+    }
+
+    .hero-cta {
+        flex-direction: column;
+    }
+
+    .hero-cta .btn {
+        width: 100%;
+    }
+
+    .about-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .advantage-item {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+
+    .advantage-number {
+        min-width: auto;
+        font-size: 2rem;
+    }
+
+    .trust-content {
+        grid-template-columns: 1fr;
+    }
+
+    .trust-stats {
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .stat-item {
+        flex: 1;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+    }
+
+    .order-content {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-content {
+        grid-template-columns: 1fr;
+    }
+
+    .sticky-cta {
+        bottom: var(--spacing-sm);
+        right: var(--spacing-sm);
+    }
+
+    .btn-sticky {
+        padding: 0.875rem 1.5rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 var(--spacing-sm);
+    }
+
+    section {
+        padding: var(--spacing-lg) 0;
+    }
+
+    .order-form {
+        padding: var(--spacing-md);
+    }
+
+    .logo {
+        font-size: 1.2rem;
+    }
+}
+

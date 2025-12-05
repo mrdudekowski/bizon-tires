@@ -1,0 +1,47 @@
+/* Advantages Section Component */
+
+.advantages {
+    background-color: var(--color-black);
+}
+
+.advantages-list {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.advantage-item {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    align-items: flex-start;
+    padding: var(--spacing-md);
+    background: rgba(255, 255, 255, 0.03);
+    border-left: 3px solid var(--color-red);
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+}
+
+.advantage-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateX(10px);
+}
+
+.advantage-number {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--color-red);
+    line-height: 1;
+    min-width: 80px;
+}
+
+.advantage-content h3 {
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-xs);
+    color: var(--color-white);
+}
+
+.advantage-content p {
+    color: var(--color-gray-lighter);
+    line-height: 1.6;
+}
+

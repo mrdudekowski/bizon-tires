@@ -1,0 +1,35 @@
+# Зависимости
+node_modules/
+package-lock.json
+yarn.lock
+
+# Временные файлы
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# Редакторы
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Логи
+*.log
+npm-debug.log*
+
+# Сборка (если будет использоваться)
+dist/
+build/
+.cache/
+
+# Окружение
+.env
+.env.local
+
+# Большие медиа файлы (опционально, если не нужны в репозитории)
+# assets/videos/*
+# assets/documents/*
+
