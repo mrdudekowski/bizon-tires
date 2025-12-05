@@ -1,14 +1,7 @@
 // Модуль обработки форм
 
-// CONFIG и утилиты доступны глобально
-const CONFIG = window.CONFIG || {
-    form: {
-        honeypotField: 'website',
-        validation: {
-            minNameLength: 2
-        }
-    }
-};
+// CONFIG доступен глобально через window.CONFIG (загружается из config.js)
+// Используем window.CONFIG напрямую, чтобы избежать конфликта объявлений
 
 // Используем функции валидации из validation.js (загружается отдельно)
 const validateEmail = window.validateEmail || function(email) {
@@ -62,7 +55,7 @@ window.initForm = function() {
         e.preventDefault();
         
         // Honeypot проверка
-        const honeypot = document.getElementById(CONFIG.form.honeypotField);
+        const honeypot = document.getElementById(window.CONFIG.form.honeypotField);
         if (honeypot && honeypot.value !== '') {
             return; // Бот обнаружен
         }
@@ -76,7 +69,7 @@ window.initForm = function() {
         const privacy = formData.get('privacy');
         
         // Валидация
-        if (!name || name.length < CONFIG.form.validation.minNameLength) {
+        if (!name || name.length < window.CONFIG.form.validation.minNameLength) {
             showMessage('Пожалуйста, введите ваше имя (минимум 2 символа)', 'error');
             return;
         }
@@ -105,7 +98,7 @@ window.initForm = function() {
         
         try {
             // Здесь будет реальный API запрос
-            // const response = await fetch(CONFIG.api.endpoints.submitForm, {
+            // const response = await fetch(window.CONFIG.api.endpoints.submitForm, {
             //     method: 'POST',
             //     body: formData
             // });

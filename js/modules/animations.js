@@ -1,20 +1,13 @@
 // Модуль анимаций
 
-// CONFIG доступен глобально
-const CONFIG = window.CONFIG || {
-    animations: {
-        intersectionThreshold: 0.1,
-        fadeInDuration: 600
-    }
-};
+// CONFIG доступен глобально через window.CONFIG (загружается из config.js)
+// Используем window.CONFIG напрямую, чтобы избежать конфликта объявлений
 
 // Экспорт функции для глобального доступа
 window.initAnimations = function() {
-
-export function initAnimations() {
     // Intersection Observer для анимаций при скролле
     const observerOptions = {
-        threshold: CONFIG.animations.intersectionThreshold,
+        threshold: window.CONFIG.animations.intersectionThreshold,
         rootMargin: '0px 0px -50px 0px'
     };
 
@@ -36,7 +29,7 @@ export function initAnimations() {
         animatedElements.forEach(el => {
             el.style.opacity = '0';
             el.style.transform = 'translateY(20px)';
-            el.style.transition = `opacity ${CONFIG.animations.fadeInDuration}ms ease, transform ${CONFIG.animations.fadeInDuration}ms ease`;
+            el.style.transition = `opacity ${window.CONFIG.animations.fadeInDuration}ms ease, transform ${window.CONFIG.animations.fadeInDuration}ms ease`;
             observer.observe(el);
         });
     });
