@@ -1,36 +1,61 @@
-# Зависимости
+# Dependencies
 node_modules/
-package-lock.json
-yarn.lock
+.pnp
+.pnp.js
 
-# Временные файлы
-*.tmp
-*.temp
-.DS_Store
-Thumbs.db
+# Testing
+coverage/
+*.lcov
+.nyc_output
 
-# Редакторы
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# Логи
-*.log
-npm-debug.log*
-
-# Сборка (если будет использоваться)
+# Production build
 dist/
 build/
-.cache/
+*.local
 
-# Окружение
+# Environment variables
 .env
 .env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# Большие медиа файлы (опционально, если не нужны в репозитории)
-# assets/videos/*
-# assets/documents/*
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-assets/c__Users_mrdud_AppData_Roaming_Cursor_User_workspaceStorage_f35d99dc85ff84b101ee50ccd1f85251_images_image-86c30696-8cea-463d-9011-6d2e058667c2.png
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Vite
+.vite/
+*.log
+
+# TypeScript
+*.tsbuildinfo
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
