@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import BurgerMenu from "./components/BurgerMenu/BurgerMenu.jsx";
+import BurgerToggle from "./components/BurgerToggle/BurgerToggle.jsx";
 
 const App = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -17,18 +18,13 @@ const App = () => {
 
         <header className="site-header">
           <div className="navbar">
-            <button
+            <div
               className="burger-button"
-              type="button"
               aria-expanded={menuOpen}
               aria-controls="burger-menu"
-              aria-label="Открыть меню"
-              onClick={() => setMenuOpen(true)}
             >
-              <span className="burger-line"></span>
-              <span className="burger-line"></span>
-              <span className="burger-line"></span>
-            </button>
+              <BurgerToggle isOpen={menuOpen} onToggle={setMenuOpen} />
+            </div>
 
             <a className="brand" href="#top" aria-label="Bizon Tires">
               <span className="brand-mark">Bizon Tires</span>
@@ -69,9 +65,74 @@ const App = () => {
               <div className="image-placeholder">IMAGE PLACEHOLDER</div>
             </div>
           </section>
+
+          <section id="products" className="section">
+            <h2 className="section-title">Продукты</h2>
+            <p className="section-description">
+              Линейка шин для магистралей, карьеров и бездорожья. Пока используем
+              заглушки для тестирования сетки.
+            </p>
+            <div className="section-grid">
+              <article className="info-card">
+                <h3 className="info-card-title">Магистральная серия</h3>
+                <p className="info-card-text">Стабильность и низкий износ.</p>
+              </article>
+              <article className="info-card">
+                <h3 className="info-card-title">Карьерная серия</h3>
+                <p className="info-card-text">Усиленный протектор.</p>
+              </article>
+              <article className="info-card">
+                <h3 className="info-card-title">Бездорожье</h3>
+                <p className="info-card-text">Уверенное сцепление.</p>
+              </article>
+            </div>
+          </section>
+
+          <section id="features" className="section">
+            <h2 className="section-title">Преимущества</h2>
+            <p className="section-description">
+              Три ключевых преимущества Bizon Tires, на которые будем опираться
+              при дальнейшем развитии.
+            </p>
+            <div className="section-grid">
+              <article className="info-card">
+                <h3 className="info-card-title">Надежность</h3>
+                <p className="info-card-text">Выдерживает тяжелые нагрузки.</p>
+              </article>
+              <article className="info-card">
+                <h3 className="info-card-title">Экономичность</h3>
+                <p className="info-card-text">Оптимальный ресурс пробега.</p>
+              </article>
+              <article className="info-card">
+                <h3 className="info-card-title">Сервис</h3>
+                <p className="info-card-text">Поддержка и консультации.</p>
+              </article>
+            </div>
+          </section>
+
+          <section id="contact" className="section">
+            <h2 className="section-title">Контакты</h2>
+            <p className="section-description">
+              Свяжитесь с нами для расчета или консультации.
+            </p>
+            <div className="section-grid">
+              <article className="info-card">
+                <h3 className="info-card-title">Телефон</h3>
+                <p className="info-card-text">+7 (000) 000-00-00</p>
+              </article>
+              <article className="info-card">
+                <h3 className="info-card-title">Email</h3>
+                <p className="info-card-text">info@bizontires.example</p>
+              </article>
+              <article className="info-card">
+                <h3 className="info-card-title">География</h3>
+                <p className="info-card-text">Работаем по всей стране.</p>
+              </article>
+            </div>
+          </section>
         </main>
 
-        <footer className="site-footer" id="contact">
+        <footer className="site-footer">
           <div className="footer-content">
             <span>Bizon Tires</span>
             <span>info@bizontires.example</span>
