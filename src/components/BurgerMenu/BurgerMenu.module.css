@@ -23,7 +23,8 @@
 .menuPanel {
   position: relative;
   width: min(860px, 92vw);
-  height: 100%;
+  height: 100vh;
+  max-height: 100%;
   background: var(--color-surface);
   transform: translateX(-100%);
   transition: transform 280ms ease;
@@ -54,9 +55,10 @@
   display: grid;
   grid-template-columns: 300px 1fr;
   gap: 0;
-  height: calc(100% - 64px);
+  flex: 1;
+  min-height: 0;
   padding: 24px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .leftPane {
@@ -98,17 +100,28 @@
   background: var(--color-surface-muted);
   border-radius: 12px;
   padding: 20px;
-  overflow-y: auto;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
 }
 
 .sectionTitle {
   margin: 0 0 16px;
   font-size: 20px;
+  flex-shrink: 0;
 }
 
 .submenuContent {
   display: grid;
   gap: 16px;
+  flex: 1 !important;
+  min-height: 0 !important;
+  align-content: start;
 }
 
 .submenuCard {
@@ -118,17 +131,19 @@
   background: var(--color-surface);
   border-radius: 12px;
   padding: 16px;
+  min-height: 140px;
 }
 
 .imagePlaceholder {
-  width: 100%;
-  min-height: 80px;
+  width: 120px;
+  height: 108px;
   border: 1px dashed var(--color-border-dashed);
   display: grid;
   place-items: center;
   font-size: 12px;
   color: var(--color-text-subtle);
   background: var(--color-surface-muted);
+  border-radius: 8px;
 }
 
 .submenuText {
@@ -145,8 +160,22 @@
   color: var(--color-text-subtle);
 }
 
+.submenuDescription {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.descriptionItem {
+  font-size: 13px;
+  color: var(--color-muted);
+  line-height: 1.4;
+}
+
 .comingSoon {
   color: var(--color-text-subtle);
+  flex-shrink: 0;
 }
 
 .backButton {
@@ -156,6 +185,7 @@
   cursor: pointer;
   padding: 10px 0;
   min-width: 120px;
+  flex-shrink: 0;
 }
 
 @media (max-width: 768px) {
@@ -166,6 +196,9 @@
   .menuBody {
     grid-template-columns: 1fr;
     padding: 16px;
+    flex: 1 !important;
+    min-height: 0 !important;
+    overflow: visible !important;
   }
 
   .leftPane {
@@ -174,7 +207,15 @@
 
   .rightPane {
     background: var(--color-surface);
-    padding: 0;
+    padding: 16px;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    box-sizing: border-box !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
   }
 
   .submenuCard {

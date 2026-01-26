@@ -1,13 +1,20 @@
+import tireTypesData from "../../../data/tireTypes.json";
+
+// Преобразуем данные шин в формат для меню
+const tireTypesSubmenu = tireTypesData.map((tire) => ({
+  id: tire.id,
+  name: tire.name,
+  description: tire.description_short,
+  link: `#${tire.id}`,
+  image: "placeholder.jpg",
+}));
+
 const menuItems = [
   {
     id: "models",
     label: "Модели",
     hasSubmenu: true,
-    submenu: [
-      { name: "718", type: "Бензин", image: "placeholder.jpg" },
-      { name: "911", type: "Бензин", image: "placeholder.jpg" },
-      { name: "Taycan", type: "Электрический", image: "placeholder.jpg" },
-    ],
+    submenu: tireTypesSubmenu,
   },
   {
     id: "about",

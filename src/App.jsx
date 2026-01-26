@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import BurgerMenu from "./components/BurgerMenu/BurgerMenu.jsx";
 import BurgerToggle from "./components/BurgerToggle/BurgerToggle.jsx";
+import ProductCarousel from "./components/ProductCarousel/ProductCarousel.jsx";
 
 const App = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -72,20 +73,7 @@ const App = () => {
               Линейка шин для магистралей, карьеров и бездорожья. Пока используем
               заглушки для тестирования сетки.
             </p>
-            <div className="section-grid">
-              <article className="info-card">
-                <h3 className="info-card-title">Магистральная серия</h3>
-                <p className="info-card-text">Стабильность и низкий износ.</p>
-              </article>
-              <article className="info-card">
-                <h3 className="info-card-title">Карьерная серия</h3>
-                <p className="info-card-text">Усиленный протектор.</p>
-              </article>
-              <article className="info-card">
-                <h3 className="info-card-title">Бездорожье</h3>
-                <p className="info-card-text">Уверенное сцепление.</p>
-              </article>
-            </div>
+            <ProductCarousel />
           </section>
 
           <section id="features" className="section">

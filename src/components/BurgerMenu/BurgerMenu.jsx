@@ -29,6 +29,9 @@ const BurgerMenu = ({ isOpen, onClose }) => {
     [contentId]
   );
 
+  const showRightPane = !isMobile || submenuView;
+  const showLeftPane = !isMobile || !submenuView;
+
   useEffect(() => {
     if (!isOpen) {
       setSubmenuView(false);
@@ -63,9 +66,6 @@ const BurgerMenu = ({ isOpen, onClose }) => {
   const handleBack = () => {
     setSubmenuView(false);
   };
-
-  const showRightPane = !isMobile || submenuView;
-  const showLeftPane = !isMobile || !submenuView;
 
   return (
     <div
@@ -137,7 +137,7 @@ const BurgerMenu = ({ isOpen, onClose }) => {
               {activeContentItem?.hasSubmenu ? (
                 <div className={styles.submenuContent}>
                   {activeContentItem.submenu?.map((submenuItem) => (
-                    <div className={styles.submenuCard} key={submenuItem.name}>
+                    <div className={styles.submenuCard} key={submenuItem.id || submenuItem.name}>
                       {"image" in submenuItem && (
                         <div className={styles.imagePlaceholder}>
                           IMAGE PLACEHOLDER
@@ -151,6 +151,15 @@ const BurgerMenu = ({ isOpen, onClose }) => {
                           <span className={styles.submenuMeta}>
                             {submenuItem.type}
                           </span>
+                        )}
+                        {submenuItem.description && (
+                          <div className={styles.submenuDescription}>
+                            {submenuItem.description.split("•").filter(Boolean).map((item, index) => (
+                              <span key={index} className={styles.descriptionItem}>
+                                • {item.trim()}
+                              </span>
+                            ))}
+                          </div>
                         )}
                       </div>
                     </div>
