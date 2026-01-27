@@ -1,96 +1,85 @@
-import React, { useCallback, useEffect } from "react";
-import useEmblaCarousel from "embla-carousel-react";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-import TireTypeCard from "./TireTypeCard.jsx";
-import tireTypesData from "../../../data/tireTypes.json";
-
-// Lightweight runtime validator
-const validateTireType = (item) => {
-  if (!item || typeof item !== "object") return false;
-  if (typeof item.id !== "string" || !item.id.trim()) return false;
-  if (typeof item.name !== "string" || !item.name.trim()) return false;
-  if (typeof item.description_short !== "string" || !item.description_short.trim()) return false;
-  return true;
-};
+import React, { useRef, useState, useEffect } from 'react';
+import tireTypesData from '../../../data/tireTypes.json';
 
 const ProductCarousel = () => {
-  // Validate and filter data
-  const tireTypes = React.useMemo(() => {
-    const validated = tireTypesData.filter((item) => {
-      const isValid = validateTireType(item);
-      if (!isValid) {
-        console.warn("Invalid tire type data:", item);
-      }
-      return isValid;
-    });
-    return validated;
-  }, []);
+  const trackRef = useRef(null);
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(true);
 
-  // Embla carousel setup with proper configuration
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: false,
-    align: "start",
-    containScroll: "trimSnaps"
-  });
+  const updateArrowState = () => {
+    const track = trackRef.current;
+    if (!track) return;
+    
+    const { scrollLeft, scrollWidth, clientWidth } = track;
+    setCanScrollPrev(scrollLeft > 0);
+    setCanScrollNext(scrollLeft < scrollWidth - clientWidth - 1);
+  };
 
-  const [prevBtnDisabled, setPrevBtnDisabled] = React.useState(true);
-  const [nextBtnDisabled, setNextBtnDisabled] = React.useState(true);
+  const scrollPrev = () => {
+    trackRef.current?.scrollBy({ left: -trackRef.current.clientWidth, behavior: 'smooth' });
+  };
 
-  const scrollPrev = useCallback(() => {
-    if (emblaApi) emblaApi.scrollPrev();
-  }, [emblaApi]);
-
-  const scrollNext = useCallback(() => {
-    if (emblaApi) emblaApi.scrollNext();
-  }, [emblaApi]);
-
-  const onSelect = useCallback(() => {
-    if (!emblaApi) return;
-    setPrevBtnDisabled(!emblaApi.canScrollPrev());
-    setNextBtnDisabled(!emblaApi.canScrollNext());
-  }, [emblaApi]);
+  const scrollNext = () => {
+    trackRef.current?.scrollBy({ left: trackRef.current.clientWidth, behavior: 'smooth' });
+  };
 
   useEffect(() => {
-    if (!emblaApi) return;
-    onSelect();
-    emblaApi.on("select", onSelect);
-    emblaApi.on("reInit", onSelect);
-  }, [emblaApi, onSelect]);
+    const track = trackRef.current;
+    if (!track) return;
 
-  // Don't render if no valid data
-  if (tireTypes.length === 0) {
-    console.warn("No valid tire types to display");
-    return null;
-  }
+    updateArrowState();
+    track.addEventListener('scroll', updateArrowState);
+    window.addEventListener('resize', updateArrowState);
+
+    return () => {
+      track.removeEventListener('scroll', updateArrowState);
+      window.removeEventListener('resize', updateArrowState);
+    };
+  }, []);
+
+  // Split description_short by bullet points
+  const renderCard = (tire) => {
+    const bulletPoints = tire.description_short
+      .split('•')
+      .map((item) => item.trim())
+      .filter(Boolean);
+
+    return (
+      <article key={tire.id} className="product-card">
+        <h3 className="product-card-title">{tire.name}</h3>
+        <ul className="product-card-list">
+          {bulletPoints.map((item, index) => (
+            <li key={index} className="product-card-item">
+              • {item}
+            </li>
+          ))}
+        </ul>
+      </article>
+    );
+  };
 
   return (
-    <div className="carousel-container">
-      <div className="carousel-viewport" ref={emblaRef}>
-        <div className="carousel-track">
-          {tireTypes.map((tireType) => (
-            <div key={tireType.id} className="carousel-slide">
-              <TireTypeCard tireType={tireType} />
-            </div>
-          ))}
-        </div>
+    <div className="product-carousel">
+      <div className="product-carousel-track" ref={trackRef}>
+        {tireTypesData.map(renderCard)}
       </div>
 
       <button
-        className="carousel-arrow carousel-arrow-prev"
+        className="carousel-nav carousel-nav-prev"
         onClick={scrollPrev}
-        disabled={prevBtnDisabled}
-        aria-label="Previous slide"
+        disabled={!canScrollPrev}
+        aria-label="Предыдущий слайд"
       >
-        <FaArrowLeft />
+        ←
       </button>
 
       <button
-        className="carousel-arrow carousel-arrow-next"
+        className="carousel-nav carousel-nav-next"
         onClick={scrollNext}
-        disabled={nextBtnDisabled}
-        aria-label="Next slide"
+        disabled={!canScrollNext}
+        aria-label="Следующий слайд"
       >
-        <FaArrowRight />
+        →
       </button>
     </div>
   );

@@ -47,6 +47,7 @@ body {
   color: var(--color-foreground);
   background: var(--color-background);
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 body.menu-open {
@@ -228,6 +229,7 @@ main {
   margin: 0 auto;
   padding: 80px 20px;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 20px;
 }
 
@@ -293,76 +295,89 @@ main {
   flex-wrap: wrap;
 }
 
-/* Product Carousel Styles */
-.carousel-container {
+/* Product Carousel - Native Scroll Snap Implementation */
+.product-carousel {
   position: relative;
-  max-width: var(--container-max);
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-@media (min-width: 1024px) {
-  .carousel-container {
-    padding: 0 60px;
-  }
-}
-
-.carousel-viewport {
-  overflow: hidden;
-}
-
-.carousel-track {
-  display: flex;
-  gap: 1.5rem;
-}
-
-.carousel-slide {
-  flex: 0 0 100%;
+  width: 100%;
+  max-width: 100%;
   min-width: 0;
-  display: flex;
-  justify-content: center;
+  padding: 0 44px; /* Space for arrows */
+}
+
+.product-carousel-track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 100%; /* Mobile: 1 card full width */
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+  -webkit-overflow-scrolling: touch; /* iOS momentum scrolling */
+  min-width: 0;
+}
+
+.product-carousel-track::-webkit-scrollbar {
+  display: none; /* Chrome/Safari/Opera */
 }
 
 /* Tablet: 2 cards */
 @media (min-width: 640px) {
-  .carousel-slide {
-    flex: 0 0 calc((100% - 1.5rem) / 2);
+  .product-carousel {
+    padding: 0 50px;
+  }
+  
+  .product-carousel-track {
+    grid-auto-columns: calc((100% - 16px) / 2);
   }
 }
 
 /* Desktop Small: 3 cards */
 @media (min-width: 1024px) {
-  .carousel-slide {
-    flex: 0 0 calc((100% - 3rem) / 3);
+  .product-carousel {
+    padding: 0 56px;
+  }
+  
+  .product-carousel-track {
+    grid-auto-columns: calc((100% - 32px) / 3);
   }
 }
 
 /* Desktop Large: 4 cards */
 @media (min-width: 1280px) {
-  .carousel-slide {
-    flex: 0 0 calc((100% - 4.5rem) / 4);
+  .product-carousel {
+    padding: 0 60px;
+  }
+  
+  .product-carousel-track {
+    grid-auto-columns: calc((100% - 48px) / 4);
   }
 }
 
-.tire-card {
-  background: var(--color-surface-muted);
+/* Product Card - styled like .info-card for consistency */
+.product-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: 16px;
-  padding: 24px;
-  width: 100%;
-  height: 100%;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 12px;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  min-height: 180px; /* Ensure consistent height */
 }
 
-.tire-card-title {
+.product-card-title {
   margin: 0;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--color-foreground);
+  line-height: 1.3;
 }
 
-.tire-card-list {
+.product-card-list {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -371,57 +386,74 @@ main {
   gap: 8px;
 }
 
-.tire-card-item {
+.product-card-item {
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.6;
   color: var(--color-muted);
 }
 
-.carousel-arrow {
+/* Navigation Arrows */
+.carousel-nav {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: none;
-  border: none;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 24px;
-  cursor: pointer;
-  padding: 0;
   width: 40px;
   height: 40px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  color: var(--color-foreground);
+  font-size: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color var(--transition-fast);
-  z-index: 10;
 }
 
-.carousel-arrow:hover:not(:disabled) {
-  color: rgba(255, 255, 255, 1);
+.carousel-nav:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-50%) scale(1.1);
 }
 
-.carousel-arrow:disabled {
+.carousel-nav:disabled {
   opacity: 0.3;
   cursor: not-allowed;
 }
 
-.carousel-arrow-prev {
-  left: 0;
+.carousel-nav-prev {
+  left: 4px;
 }
 
-.carousel-arrow-next {
-  right: 0;
+.carousel-nav-next {
+  right: 4px;
 }
 
-@media (max-width: 767px) {
-  .carousel-container {
-    padding: 0 40px;
+@media (max-width: 639px) {
+  .carousel-nav {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
   }
+  
+  .carousel-nav-prev {
+    left: 2px;
+  }
+  
+  .carousel-nav-next {
+    right: 2px;
+  }
+}
 
-  .carousel-arrow {
-    font-size: 20px;
-    width: 32px;
-    height: 32px;
+@media (min-width: 1024px) {
+  .carousel-nav-prev {
+    left: 6px;
+  }
+  
+  .carousel-nav-next {
+    right: 6px;
   }
 }
 
