@@ -1,4 +1,4 @@
-import tireTypesData from "../../../data/tireTypes.json";
+import tireTypesData from "@/data/tireTypes.json";
 
 // Преобразуем данные шин в формат для меню
 const tireTypesSubmenu = tireTypesData.map((tire) => ({

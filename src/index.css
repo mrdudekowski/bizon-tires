@@ -7,13 +7,16 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Box-sizing reset - обеспечивает предсказуемые размеры элементов, включая padding и border */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
+/* CSS Variables - Single Source of Truth для всех дизайн-токенов проекта */
 :root {
+  /* Указываем браузеру использовать темную цветовую схему для системных элементов */
   color-scheme: dark;
   --font-sans: system-ui, sans-serif;
   --radius: 0.625rem;
@@ -35,37 +38,76 @@
   --color-on-primary: #ffffff;
   --color-ring: #ff2b2b;
   --color-overlay: rgba(0, 0, 0, 0.6);
+  
+  /* Градиент для contact-button - создает эффект анимированного свечения */
+  --color-primary-dark: #5c1212;
+  --color-primary-light: #ff5a5a;
+  
+  /* Тени для contact-button - многослойный эффект для глубины */
+  --shadow-contact-default: 0 0 0 0.5px rgba(255, 43, 43, 0.55), 0 0 0 0 rgba(255, 43, 43, 0);
+  --shadow-contact-hover: 0 0 0 0.5px rgba(255, 160, 160, 0.95), 0 0 18px rgba(255, 43, 43, 0.6);
+  --shadow-contact-active: 0 0 0 0.5px rgba(255, 43, 43, 0.9), 0 0 10px rgba(255, 43, 43, 0.75);
+  
+  /* Фон для contact-button::before - затемнение для читаемости текста поверх градиента */
+  --color-overlay-dark: rgba(0, 0, 0, 0.88);
+  
+  /* Фоны для кнопок карусели - полупрозрачные для эффекта стекла */
+  --color-carousel-nav-bg: rgba(255, 255, 255, 0.1);
+  --color-carousel-nav-bg-hover: rgba(255, 255, 255, 0.2);
+  
+  /* Общие паттерны - вынесены в переменные для единообразия и Single Source of Truth */
+  --spacing-button-padding: 10px 18px;
+  --spacing-card-padding: 20px;
+  --spacing-card-gap: 8px;
+  --spacing-card-gap-large: 12px;
+  --spacing-section-padding: 80px 20px;
+  --focus-outline: 2px solid var(--color-ring);
+  --focus-offset: 2px;
+  /* Трансформации для интерактивных элементов - единообразные эффекты hover и active */
+  --transform-hover-lift: translateY(-1px);
+  --transform-active-press: scale(0.97);
+  /* Z-index иерархия - управление слоями для правильного наложения элементов */
+  --z-index-skip-link: 1000;
+  --z-index-header: 200;
+  --z-index-carousel-nav: 10;
 }
 
+/* Плавная прокрутка для улучшения UX при навигации по странице */
 html {
   scroll-behavior: smooth;
 }
 
+/* Базовые стили body - используем CSS-переменные для единообразия темы */
 body {
   margin: 0;
   font-family: var(--font-sans);
   color: var(--color-foreground);
   background: var(--color-background);
   min-height: 100vh;
+  /* Предотвращаем горизонтальный скролл при переполнении контента */
   overflow-x: hidden;
 }
 
+/* Фиксируем body при открытом меню - предотвращаем прокрутку фона для лучшего UX мобильного меню */
 body.menu-open {
   position: fixed;
   width: 100%;
   overflow: hidden;
 }
 
+/* Сброс стилей ссылок - наследуем цвет и убираем подчеркивание для чистого дизайна */
 a {
   color: inherit;
   text-decoration: none;
 }
 
+/* Размытие фона при открытом мобильном меню - визуально выделяет меню и фокусирует внимание */
 .page--blurred {
   filter: blur(8px);
   transition: filter var(--transition-fast);
 }
 
+/* Skip link для доступности - скрыт визуально, но доступен для screen readers и клавиатурной навигации */
 .skip-link {
   position: absolute;
   left: -999px;
@@ -84,9 +126,10 @@ a {
   padding: 8px 12px;
   background: var(--color-primary);
   color: var(--color-on-primary);
-  z-index: 1000;
+  z-index: var(--z-index-skip-link);
 }
 
+/* Фиксированный хедер - всегда видим при прокрутке для постоянного доступа к навигации */
 .site-header {
   position: fixed;
   top: 0;
@@ -94,12 +137,20 @@ a {
   height: var(--header-height);
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-border);
-  z-index: 200;
+  z-index: var(--z-index-header);
 }
 
-.navbar {
+/* Базовый контейнер - единый источник для всех контейнеров с max-width */
+.container-base,
+.navbar,
+.section,
+.footer-content {
   max-width: var(--container-max);
   margin: 0 auto;
+}
+
+/* Навигационная панель - сетка с тремя колонками: burger, логотип (центр), действия (справа) */
+.navbar {
   height: 100%;
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -108,6 +159,7 @@ a {
   padding: 0 20px;
 }
 
+/* Кнопка мобильного меню - квадратная для удобного тапа на мобильных устройствах */
 .burger-button {
   width: 40px;
   height: 40px;
@@ -116,6 +168,7 @@ a {
   justify-content: center;
 }
 
+/* Бренд/логотип - кликабельный элемент для возврата на главную, центрируется на мобильных */
 .brand {
   justify-self: center;
   font-weight: 700;
@@ -130,7 +183,8 @@ a {
 
 .brand-logo {
   display: block;
-  height: calc(var(--header-height) - 8px); /* ещё крупнее, но с небольшим отступом */
+  /* Уменьшаем высоту на мобильных для визуального баланса с burger-кнопкой */
+  height: calc(var(--header-height) - 8px);
   max-height: calc(var(--header-height) - 8px);
   width: auto;
   object-fit: contain;
@@ -138,7 +192,7 @@ a {
   -webkit-user-drag: none;
 }
 
-/* На планшетах и десктопах логотип смещаем ближе к бургеру */
+/* Адаптивная сетка навигации: на планшетах+ логотип выравнивается к началу для лучшей читаемости */
 @media (min-width: 768px) {
   .navbar {
     grid-template-columns: auto auto 1fr;
@@ -149,11 +203,13 @@ a {
   }
 
   .brand-logo {
+    /* На больших экранах логотип ближе к полной высоте для лучшей видимости */
     height: calc(var(--header-height) - 2px);
     max-height: calc(var(--header-height) - 2px);
   }
 }
 
+/* Контейнер действий навигации - выравнивается вправо в сетке navbar */
 .nav-actions {
   display: flex;
   gap: 20px;
@@ -161,67 +217,95 @@ a {
   justify-self: end;
 }
 
+/* Десктопная навигация - горизонтальное меню ссылок, скрывается на мобильных */
 .desktop-nav {
   display: flex;
   gap: 16px;
   align-items: center;
 }
 
+/* Стили ссылок десктопной навигации - компактный размер для экономии места */
 .desktop-nav a {
   font-size: 14px;
   letter-spacing: 0.02em;
   color: var(--color-foreground);
 }
 
-.cta-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 18px;
-  background: var(--color-primary);
-  color: var(--color-on-primary);
-  font-weight: 600;
-  transition: transform var(--transition-fast);
-  border-radius: var(--radius);
-  border: none;
-  outline: none;
+/* Десктопная навигация скрывается на мобильных и планшетах для экономии места - используется burger-меню */
+@media (max-width: 1023px) {
+  .desktop-nav {
+    display: none;
+  }
 }
 
-.cta-button:hover {
-  transform: translateY(-1px);
-}
-
-.cta-button:active {
-  transform: scale(0.97);
-}
-
+/* Базовые стили кнопок - единый источник для всех типов кнопок */
+.button-base,
+.cta-button,
 .ghost-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 18px;
+  padding: var(--spacing-button-padding);
+  border-radius: var(--radius);
+  outline: none;
+  transition: transform var(--transition-fast);
+}
+
+/* Основная CTA кнопка - яркий акцентный цвет для привлечения внимания к действию */
+.cta-button {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  font-weight: 600;
+  border: none;
+}
+
+/* Hover эффект CTA - легкий подъем для визуальной обратной связи */
+.cta-button:hover {
+  transform: var(--transform-hover-lift);
+}
+
+/* Active состояние CTA - уменьшение для тактильной обратной связи при клике */
+.cta-button:active {
+  transform: var(--transform-active-press);
+}
+
+/* Ghost кнопка - прозрачный фон с обводкой для вторичных действий, менее навязчивая чем CTA */
+.ghost-button {
   background: transparent;
   border: 1px solid var(--color-foreground);
   color: var(--color-foreground);
-  border-radius: var(--radius);
-  outline: none;
 }
 
+/* Базовые стили заголовков карточек - единый источник для консистентной типографики */
+.card-title-base,
+.info-card-title,
+.product-card-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-foreground);
+  line-height: 1.3;
+}
+
+/* Active состояние ghost кнопки - единообразная обратная связь с CTA */
+.ghost-button:active {
+  transform: var(--transform-active-press);
+}
+
+/* Единый стиль focus для всех интерактивных элементов */
 .cta-button:focus-visible,
 .ghost-button:focus-visible,
 .contact-button:focus-visible {
-  outline: 2px solid var(--color-ring);
-  outline-offset: 2px;
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-offset);
 }
 
-.ghost-button:active {
-  transform: scale(0.97);
-}
-
+/* Отступ main для фиксированного хедера - предотвращает перекрытие контента */
 main {
   padding-top: var(--header-height);
 }
 
+/* Главная секция hero - использует .container-base для единообразия max-width и центрирования */
 .hero {
   max-width: var(--container-max);
   margin: 0 auto;
@@ -232,6 +316,7 @@ main {
   align-items: center;
 }
 
+/* Eyebrow текст - мелкий заголовок над основным заголовком для иерархии информации */
 .eyebrow {
   text-transform: uppercase;
   letter-spacing: 0.16em;
@@ -239,17 +324,20 @@ main {
   color: var(--color-muted);
 }
 
+/* Адаптивный заголовок hero - использует clamp для плавного масштабирования между breakpoints */
 .hero h1 {
   font-size: clamp(32px, 4vw, 56px);
   margin: 12px 0;
 }
 
+/* Текст hero - ограниченная ширина для оптимальной читаемости длинных строк */
 .hero-text {
   font-size: 16px;
   line-height: 1.6;
   max-width: 520px;
 }
 
+/* Контейнер кнопок действий hero - flex-wrap для адаптивности на узких экранах */
 .hero-actions {
   display: flex;
   gap: 12px;
@@ -257,11 +345,13 @@ main {
   flex-wrap: wrap;
 }
 
+/* Контейнер медиа hero - центрирует изображение/видео */
 .hero-media {
   display: grid;
   place-items: center;
 }
 
+/* Placeholder для изображений - визуально обозначает место для будущего контента */
 .image-placeholder {
   width: 100%;
   min-height: 260px;
@@ -274,20 +364,21 @@ main {
   background: var(--color-surface-muted);
 }
 
+/* Базовый контейнер для всех секций страницы - использует .container-base для единообразия max-width */
 .section {
-  max-width: var(--container-max);
-  margin: 0 auto;
-  padding: 80px 20px;
+  padding: var(--spacing-section-padding);
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 20px;
 }
 
+/* Заголовок секции - адаптивный размер для консистентной типографики */
 .section-title {
   font-size: clamp(24px, 3vw, 36px);
   margin: 0;
 }
 
+/* Описание секции - ограниченная ширина для оптимальной читаемости */
 .section-description {
   margin: 0;
   max-width: 680px;
@@ -295,32 +386,35 @@ main {
   line-height: 1.6;
 }
 
+/* Адаптивная сетка секций - автоматически подстраивается под доступное пространство */
 .section-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 16px;
 }
 
-.info-card {
+/* Base card styles - Single Source of Truth для всех типов карточек */
+.card-base {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  padding: 20px;
-  display: grid;
-  gap: 8px;
+  padding: var(--spacing-card-padding);
   border-radius: var(--radius);
 }
 
-.info-card-title {
-  margin: 0;
-  font-size: 18px;
+/* Info карточка - расширяет .card-base, использует grid для вертикального расположения контента */
+.info-card {
+  display: grid;
+  gap: var(--spacing-card-gap);
 }
 
+/* Текст info карточки - приглушенный цвет для визуальной иерархии */
 .info-card-text {
   margin: 0;
   color: var(--color-muted);
   line-height: 1.5;
 }
 
+/* Список в info карточке - маркированный список с вертикальными отступами */
 .info-card-list {
   margin: 0;
   padding-left: 18px;
@@ -330,21 +424,22 @@ main {
   color: var(--color-muted);
 }
 
+/* Футер сайта - темный фон для визуального отделения от основного контента */
 .site-footer {
   background: var(--color-surface-strong);
   color: var(--color-on-primary);
   padding: 32px 20px;
 }
 
+/* Контент футера - использует .container-base для единообразия max-width и центрирования */
 .footer-content {
-  max-width: var(--container-max);
-  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   gap: 12px;
   flex-wrap: wrap;
 }
 
+/* Кнопка контакта - сложная анимация с градиентом и тенями для привлечения внимания */
 .contact-button {
   position: relative;
   display: inline-flex;
@@ -354,13 +449,14 @@ main {
   height: 40px;
   padding: 0;
   border: none;
+  /* Анимированный градиент - создает эффект "бегущего света" при hover */
   background: linear-gradient(
     to right,
-    #5c1212,
+    var(--color-primary-dark),
     var(--color-primary),
-    #ff5a5a,
+    var(--color-primary-light),
     var(--color-primary),
-    #5c1212
+    var(--color-primary-dark)
   );
   background-size: 250%;
   background-position: left;
@@ -371,12 +467,11 @@ main {
     background-position 260ms ease-out,
     transform var(--transition-fast),
     box-shadow 260ms ease-out;
-  box-shadow:
-    0 0 0 0.5px rgba(255, 43, 43, 0.55),
-    0 0 0 0 rgba(255, 43, 43, 0.0);
+  box-shadow: var(--shadow-contact-default);
   border-radius: var(--radius);
 }
 
+/* Псевдоэлемент ::before для текста кнопки - затемненный фон для читаемости поверх градиента */
 .contact-button::before {
   content: "СВЯЗАТЬСЯ";
   position: absolute;
@@ -390,7 +485,8 @@ main {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   font-size: 12px;
-  background-color: rgba(0, 0, 0, 0.88);
+  /* Затемнение для контраста текста с ярким градиентом */
+  background-color: var(--color-overlay-dark);
   background-size: 200%;
   background-position: left;
   transition:
@@ -399,58 +495,61 @@ main {
   border-radius: calc(var(--radius) - 1px);
 }
 
+/* Hover состояние - сдвигает градиент вправо и добавляет свечение */
 .contact-button:hover {
   background-position: right;
-  transform: translateY(-1px);
-  box-shadow:
-    0 0 0 0.5px rgba(255, 160, 160, 0.95),
-    0 0 18px rgba(255, 43, 43, 0.6);
+  transform: var(--transform-hover-lift);
+  box-shadow: var(--shadow-contact-hover);
 }
 
+/* Синхронизация анимации ::before с основным градиентом при hover */
 .contact-button:hover::before {
   background-position: right;
 }
 
+/* Active состояние - уменьшение и усиление тени для тактильной обратной связи */
 .contact-button:active {
-  transform: scale(0.97);
-  box-shadow:
-    0 0 0 0.5px rgba(255, 43, 43, 0.9),
-    0 0 10px rgba(255, 43, 43, 0.75);
+  transform: var(--transform-active-press);
+  box-shadow: var(--shadow-contact-active);
 }
 
-/* Product Carousel - Native Scroll Snap Implementation */
+/* Product Carousel - Native Scroll Snap Implementation для плавной прокрутки без JS библиотек */
 .product-carousel {
   position: relative;
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  padding: 0 44px; /* Space for arrows */
+  /* Отступы для размещения навигационных стрелок без перекрытия контента */
+  padding: 0 44px;
 }
 
 .product-carousel-track {
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: 100%; /* Mobile: 1 card full width */
+  /* Mobile-first: одна карточка на всю ширину для лучшей читаемости */
+  grid-auto-columns: 100%;
   gap: 16px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
-  -webkit-overflow-scrolling: touch; /* iOS momentum scrolling */
+  /* Скрываем scrollbar для всех браузеров для чистого вида */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
   min-width: 0;
   cursor: grab;
 }
 
+/* Изменение курсора при перетаскивании - визуальная обратная связь для drag-взаимодействия */
 .product-carousel-track:active {
   cursor: grabbing;
 }
 
 .product-carousel-track::-webkit-scrollbar {
-  display: none; /* Chrome/Safari/Opera */
+  display: none;
 }
 
-/* Tablet: 2 cards */
+/* Адаптивная сетка карусели: увеличиваем количество карточек и отступы на больших экранах */
 @media (min-width: 640px) {
   .product-carousel {
     padding: 0 50px;
@@ -461,7 +560,6 @@ main {
   }
 }
 
-/* Desktop Small: 3 cards */
 @media (min-width: 1024px) {
   .product-carousel {
     padding: 0 56px;
@@ -472,7 +570,6 @@ main {
   }
 }
 
-/* Desktop Large: 4 cards */
 @media (min-width: 1280px) {
   .product-carousel {
     padding: 0 60px;
@@ -483,33 +580,23 @@ main {
   }
 }
 
-/* Product Card - styled like .info-card for consistency */
+/* Product Card - extends .card-base для консистентности с другими карточками */
 .product-card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--spacing-card-gap-large);
   scroll-snap-align: start;
   scroll-snap-stop: always;
-  min-height: 180px; /* Ensure consistent height */
+  /* Минимальная высота для единообразия карточек разного контента */
+  min-height: 180px;
   user-select: none;
-  border-radius: var(--radius);
 }
 
 .product-card * {
   user-select: none;
 }
 
-.product-card-title {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--color-foreground);
-  line-height: 1.3;
-}
-
+/* Список характеристик продукта - вертикальный список без маркеров */
 .product-card-list {
   margin: 0;
   padding: 0;
@@ -519,13 +606,14 @@ main {
   gap: 8px;
 }
 
+/* Элемент списка продукта - компактный размер для экономии места в карточке */
 .product-card-item {
   font-size: 14px;
   line-height: 1.6;
   color: var(--color-muted);
 }
 
-/* Navigation Arrows */
+/* Navigation Arrows - стеклянный эффект для видимости поверх контента */
 .carousel-nav {
   position: absolute;
   top: 50%;
@@ -533,29 +621,32 @@ main {
   width: 40px;
   height: 40px;
   border: none;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--color-carousel-nav-bg);
   backdrop-filter: blur(8px);
   color: var(--color-foreground);
   font-size: 20px;
   border-radius: 50%;
   cursor: pointer;
   transition: all var(--transition-fast);
-  z-index: 10;
+  z-index: var(--z-index-carousel-nav);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+/* Hover состояние навигации - увеличение и изменение прозрачности для обратной связи */
 .carousel-nav:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--color-carousel-nav-bg-hover);
   transform: translateY(-50%) scale(1.1);
 }
 
+/* Disabled состояние навигации - визуально показывает недоступность действия */
 .carousel-nav:disabled {
   opacity: 0.3;
   cursor: not-allowed;
 }
 
+/* Позиционирование стрелок навигации - базовые отступы от краев карусели */
 .carousel-nav-prev {
   left: 4px;
 }
@@ -564,6 +655,8 @@ main {
   right: 4px;
 }
 
+/* Адаптивные стили навигации карусели: группировка всех медиа-запросов */
+/* Мобильные: меньшие размеры и отступы для экономии места */
 @media (max-width: 639px) {
   .carousel-nav {
     width: 36px;
@@ -580,6 +673,7 @@ main {
   }
 }
 
+/* Десктоп: увеличенные отступы для лучшей доступности и видимости */
 @media (min-width: 1024px) {
   .carousel-nav-prev {
     left: 6px;
@@ -590,12 +684,7 @@ main {
   }
 }
 
-@media (max-width: 1024px) {
-  .desktop-nav {
-    display: none;
-  }
-}
-
+/* Уважаем предпочтения пользователей с вестибулярными расстройствами - отключаем анимации для предотвращения тошноты и головокружения */
 @media (prefers-reduced-motion: reduce) {
   * {
     transition-duration: 1ms !important;
@@ -604,6 +693,7 @@ main {
   }
 }
 
+/* Tailwind base layer - применяем глобальные стили через Tailwind утилиты для консистентности */
 @layer base {
   * {
     @apply border-border outline-ring/50;

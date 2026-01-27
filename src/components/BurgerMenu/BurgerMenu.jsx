@@ -1,28 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import menuItems from "./menuData.js";
 import styles from "./BurgerMenu.module.css";
-
-const useMediaQuery = (query) => {
-  const [matches, setMatches] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return window.matchMedia(query).matches;
-  });
-
-  useEffect(() => {
-    const media = window.matchMedia(query);
-    const handler = (event) => setMatches(event.matches);
-    media.addEventListener("change", handler);
-    return () => media.removeEventListener("change", handler);
-  }, [query]);
-
-  return matches;
-};
+import { useFocusTrap } from "@/hooks/useFocusTrap";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { parseBulletPoints } from "@/utils/textUtils";
 
 const BurgerMenu = ({ isOpen, onClose }) => {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [activeId, setActiveId] = useState(menuItems[0]?.id ?? null);
   const [contentId, setContentId] = useState(menuItems[0]?.id ?? null);
   const [submenuView, setSubmenuView] = useState(false);
+  const menuRef = useFocusTrap(isOpen);
 
   const activeContentItem = useMemo(
     () => menuItems.find((item) => item.id === contentId),
@@ -79,7 +67,7 @@ const BurgerMenu = ({ isOpen, onClose }) => {
         role="presentation"
       />
 
-      <aside className={styles.menuPanel} role="dialog" aria-modal="true">
+      <aside ref={menuRef} className={styles.menuPanel} role="dialog" aria-modal="true">
         <div className={styles.menuHeader}>
           <button
             className={styles.closeButton}
@@ -154,9 +142,9 @@ const BurgerMenu = ({ isOpen, onClose }) => {
                         )}
                         {submenuItem.description && (
                           <div className={styles.submenuDescription}>
-                            {submenuItem.description.split("•").filter(Boolean).map((item, index) => (
-                              <span key={index} className={styles.descriptionItem}>
-                                • {item.trim()}
+                            {parseBulletPoints(submenuItem.description).map((item, index) => (
+                              <span key={`${submenuItem.id || submenuItem.name}-${index}`} className={styles.descriptionItem}>
+                                • {item}
                               </span>
                             ))}
                           </div>
