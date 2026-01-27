@@ -6,6 +6,12 @@ import ProductCarousel from "./components/ProductCarousel/ProductCarousel.jsx";
 const App = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const scrollToSection = (sectionId) => {
+    const target = document.getElementById(sectionId);
+    if (!target) return;
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   useEffect(() => {
     document.body.classList.toggle("menu-open", menuOpen);
   }, [menuOpen]);
@@ -37,9 +43,13 @@ const App = () => {
                 <a href="#features">Преимущества</a>
                 <a href="#contact">Контакты</a>
               </nav>
-              <a className="contact-button" href="#contact">
+              <button
+                type="button"
+                className="contact-button"
+                onClick={() => scrollToSection("contact")}
+              >
                 Связаться
-              </a>
+              </button>
             </div>
           </div>
         </header>
@@ -54,12 +64,20 @@ const App = () => {
                 Минималистичный и тестируемый скелет для дальнейшего развития.
               </p>
               <div className="hero-actions">
-                <a className="cta-button" href="#products">
+                <button
+                  type="button"
+                  className="cta-button"
+                  onClick={() => scrollToSection("products")}
+                >
                   Каталог
-                </a>
-                <a className="ghost-button" href="#features">
+                </button>
+                <button
+                  type="button"
+                  className="ghost-button"
+                  onClick={() => scrollToSection("features")}
+                >
                   Подробнее
-                </a>
+                </button>
               </div>
             </div>
             <div className="hero-media" aria-hidden="true">

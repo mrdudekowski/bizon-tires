@@ -3,6 +3,9 @@ import tireTypesData from '../../../data/tireTypes.json';
 
 const ProductCarousel = () => {
   const trackRef = useRef(null);
+  const isDraggingRef = useRef(false);
+  const dragStartXRef = useRef(0);
+  const dragStartScrollLeftRef = useRef(0);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(true);
 
@@ -21,6 +24,26 @@ const ProductCarousel = () => {
 
   const scrollNext = () => {
     trackRef.current?.scrollBy({ left: trackRef.current.clientWidth, behavior: 'smooth' });
+  };
+
+  const handleMouseDown = (event) => {
+    const track = trackRef.current;
+    if (!track) return;
+    isDraggingRef.current = true;
+    dragStartXRef.current = event.clientX;
+    dragStartScrollLeftRef.current = track.scrollLeft;
+  };
+
+  const handleMouseMove = (event) => {
+    if (!isDraggingRef.current) return;
+    const track = trackRef.current;
+    if (!track) return;
+    const deltaX = event.clientX - dragStartXRef.current;
+    track.scrollLeft = dragStartScrollLeftRef.current - deltaX;
+  };
+
+  const handleMouseUpOrLeave = () => {
+    isDraggingRef.current = false;
   };
 
   useEffect(() => {
@@ -60,7 +83,14 @@ const ProductCarousel = () => {
 
   return (
     <div className="product-carousel">
-      <div className="product-carousel-track" ref={trackRef}>
+      <div
+        className="product-carousel-track"
+        ref={trackRef}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseUpOrLeave}
+        onMouseUp={handleMouseUpOrLeave}
+      >
         {tireTypesData.map(renderCard)}
       </div>
 
