@@ -44,7 +44,7 @@ const App = () => {
               onClick={scrollToTop}
             >
               <img
-                src="/bizon_inverted_hd.svg"
+                src="bizon_inverted_hd.svg"
                 alt="Bizon Tires"
                 className="brand-logo"
                 draggable="false"
