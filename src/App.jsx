@@ -12,6 +12,10 @@ const App = () => {
     target.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   useEffect(() => {
     document.body.classList.toggle("menu-open", menuOpen);
   }, [menuOpen]);
@@ -33,9 +37,20 @@ const App = () => {
               <BurgerToggle isOpen={menuOpen} onToggle={setMenuOpen} />
             </div>
 
-            <a className="brand" href="#top" aria-label="Bizon Tires">
-              <span className="brand-mark">Bizon Tires</span>
-            </a>
+            <button
+              type="button"
+              className="brand"
+              aria-label="Bizon Tires"
+              onClick={scrollToTop}
+            >
+              <img
+                src="/bizon_inverted_hd.svg"
+                alt="Bizon Tires"
+                className="brand-logo"
+                draggable="false"
+                onDragStart={(event) => event.preventDefault()}
+              />
+            </button>
 
             <div className="nav-actions">
               <nav className="desktop-nav" aria-label="Основная навигация">
