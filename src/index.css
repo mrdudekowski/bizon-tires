@@ -295,6 +295,79 @@ main {
   flex-wrap: wrap;
 }
 
+.contact-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 148px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(
+    to right,
+    #5c1212,
+    var(--color-primary),
+    #ff5a5a,
+    var(--color-primary),
+    #5c1212
+  );
+  background-size: 250%;
+  background-position: left;
+  color: var(--color-on-primary);
+  cursor: pointer;
+  overflow: hidden;
+  transition:
+    background-position 260ms ease-out,
+    transform var(--transition-fast),
+    box-shadow 260ms ease-out;
+  box-shadow:
+    0 0 0 0.5px rgba(255, 43, 43, 0.55),
+    0 0 0 0 rgba(255, 43, 43, 0.0);
+}
+
+.contact-button::before {
+  content: "СВЯЗАТЬСЯ";
+  position: absolute;
+  inset: 3px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  color: var(--color-on-primary);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 12px;
+  background-color: rgba(0, 0, 0, 0.88);
+  background-size: 200%;
+  background-position: left;
+  transition:
+    background-position 260ms ease-out,
+    background-color 260ms ease-out;
+}
+
+.contact-button:hover {
+  background-position: right;
+  transform: translateY(-1px);
+  box-shadow:
+    0 0 0 0.5px rgba(255, 160, 160, 0.95),
+    0 0 18px rgba(255, 43, 43, 0.6);
+}
+
+.contact-button:hover::before {
+  background-position: right;
+}
+
+.contact-button:active {
+  transform: scale(0.97);
+  box-shadow:
+    0 0 0 0.5px rgba(255, 43, 43, 0.9),
+    0 0 10px rgba(255, 43, 43, 0.75);
+}
+
 /* Product Carousel - Native Scroll Snap Implementation */
 .product-carousel {
   position: relative;

@@ -37,7 +37,7 @@ const App = () => {
                 <a href="#features">Преимущества</a>
                 <a href="#contact">Контакты</a>
               </nav>
-              <a className="cta-button" href="#contact">
+              <a className="contact-button" href="#contact">
                 Связаться
               </a>
             </div>
