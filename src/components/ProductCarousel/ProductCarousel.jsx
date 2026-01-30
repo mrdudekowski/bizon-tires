@@ -2,7 +2,10 @@ import React, { useRef, useState, useEffect, useCallback } from 'react';
 import tireTypesData from '@/data/tireTypes.json';
 import { useThrottledCallback } from '@/hooks/useThrottledCallback';
 import { useDebouncedCallback } from '@/hooks/useDebouncedCallback';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { parseBulletPoints } from '@/utils/textUtils';
+
+const CAROUSEL_GAP_PX = 16;
 
 const ProductCarousel = () => {
   const trackRef = useRef(null);
@@ -12,11 +15,17 @@ const ProductCarousel = () => {
   const rafRef = useRef(null);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(true);
-  
-  // Проверка данных при монтировании
+  const [currentPageIndex, setCurrentPageIndex] = useState(0);
+  const isMobilePagination = useMediaQuery('(max-width: 639px)');
+  const dataLengthRef = useRef(0);
+
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
-  
+
+  useEffect(() => {
+    dataLengthRef.current = data.length;
+  }, [data.length]);
+
   useEffect(() => {
     try {
       if (!tireTypesData || !Array.isArray(tireTypesData)) {
@@ -37,15 +46,19 @@ const ProductCarousel = () => {
   const updateArrowState = useCallback(() => {
     const track = trackRef.current;
     if (!track) return;
-    
+
     const { scrollLeft, scrollWidth, clientWidth } = track;
-    // Используем небольшой допуск (1px) для учета округления и погрешностей
     const tolerance = 1;
     const isAtStart = scrollLeft <= tolerance;
     const isAtEnd = scrollLeft >= scrollWidth - clientWidth - tolerance;
-    
+
     setCanScrollPrev(!isAtStart);
     setCanScrollNext(!isAtEnd);
+
+    const step = clientWidth + CAROUSEL_GAP_PX;
+    const rawPageIndex = Math.round(scrollLeft / step);
+    const maxPageIndex = Math.max(0, dataLengthRef.current - 1);
+    setCurrentPageIndex(Math.min(Math.max(0, rawPageIndex), maxPageIndex));
   }, []);
 
   const scrollPrev = useCallback(() => {
@@ -79,6 +92,19 @@ const ProductCarousel = () => {
     
     setTimeout(checkAfterScroll, 100);
   }, [canScrollNext, updateArrowState]);
+
+  const scrollToPage = useCallback((pageIndex) => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    const step = track.clientWidth + CAROUSEL_GAP_PX;
+    const maxIndex = Math.max(0, Math.ceil(track.scrollWidth / step) - 1);
+    const clampedIndex = Math.min(Math.max(0, pageIndex), maxIndex);
+
+    track.scrollTo({ left: clampedIndex * step, behavior: 'smooth' });
+    setCurrentPageIndex(clampedIndex);
+    setTimeout(updateArrowState, 350);
+  }, [updateArrowState]);
 
   const handleMouseDown = (event) => {
     const track = trackRef.current;
@@ -249,6 +275,27 @@ const ProductCarousel = () => {
       >
         →
       </button>
+
+      {isMobilePagination && data.length > 0 && (
+        <nav
+          className="carousel-pagination"
+          aria-label="Переключение слайдов карусели"
+        >
+          {data.map((_, index) => {
+            const isActive = index === currentPageIndex;
+            return (
+              <button
+                key={index}
+                type="button"
+                className={`carousel-pagination-dot ${isActive ? 'carousel-pagination-dot-active' : ''}`}
+                onClick={() => scrollToPage(index)}
+                aria-label={`Слайд ${index + 1} из ${data.length}`}
+                aria-current={isActive ? 'true' : undefined}
+              />
+            );
+          })}
+        </nav>
+      )}
     </div>
   );
 };

@@ -520,7 +520,7 @@ main {
   max-width: 100%;
   min-width: 0;
   /* Отступы для размещения навигационных стрелок без перекрытия контента */
-  padding: 0 44px;
+  padding: 0 24px;
 }
 
 .product-carousel-track {
@@ -663,14 +663,55 @@ main {
     height: 36px;
     font-size: 18px;
   }
-  
+
   .carousel-nav-prev {
     left: 2px;
+    display: none;
   }
-  
+
   .carousel-nav-next {
     right: 2px;
+    display: none;
   }
+}
+
+/* Пагинация карусели — только на мобильных (≤639px), подсказка что карточки можно листать */
+.carousel-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 8px 0;
+}
+
+.carousel-pagination-dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--color-muted);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.carousel-pagination-dot:hover {
+  background: var(--color-border-strong);
+}
+
+.carousel-pagination-dot:focus-visible {
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-offset);
+}
+
+.carousel-pagination-dot-active {
+  background: var(--color-primary);
+  transform: scale(1.25);
+}
+
+.carousel-pagination-dot-active:hover {
+  background: var(--color-primary-light);
 }
 
 /* Десктоп: увеличенные отступы для лучшей доступности и видимости */
